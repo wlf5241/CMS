@@ -1,10 +1,13 @@
 # encoding:utf-8
 from flask_script import Manager
-from app import createApp
+from flask_migrate import Migrate, MigrateCommand
+from app import app, db
 from apps.admin import models as admin_models
 
-app = createApp()
+db.create_all()
 manager = Manager(app)
+Migrate(app, db)
+manager.add_command('db', MigrateCommand)
 
 
 @manager.option('-u', '--username', dest='username')
@@ -13,7 +16,9 @@ manager = Manager(app)
 @manager.option('-t', '--phone', dest='phone')
 def create_user(username, password, phone, email):
     user = admin_models.Users(username=username, password=password, phone=phone, email=email)
-    print(f'添加用户成功：{user.id}')
+    db.session.add(user)
+    db.session.commit()
+    print(f'添加用户成功：{user.uid}')
 
 
 if __name__ == '__main__':

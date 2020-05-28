@@ -1,13 +1,10 @@
 # encoding:utf-8
-from sqlobject import *
-import re
+from app import db
 
 
-class Users(SQLObject):
-    username = StringCol(length=50, notNone=True)
-    password = StringCol(length=100, notNone=True)
-    email = StringCol(length=100, unique=True)
-    phone = IntCol(length=11, unique=True, notNone=True)
-
-
-Users.createTable()
+class Users(db.Model):
+    uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=True, unique=True)
+    phone = db.Column(db.String(20), nullable=False, unique=True)
