@@ -1,10 +1,13 @@
 # encoding:utf-8
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from app import app, db
+from app import createApp
+from extends import db
 from apps.admin import models as admin_models
 
-db.create_all()
+app = createApp()
+db.init_app(app)
+#db.create_all()
 manager = Manager(app)
 Migrate(app, db)
 manager.add_command('db', MigrateCommand)
