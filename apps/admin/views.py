@@ -15,17 +15,20 @@ bp = Blueprint("admin", __name__)
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if session.get('image').lower() != form.captcha.data.lower():
-            return render_template('admin/login.html', form=form, message='验证码错误！')
-        user = Users.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            session[config.ADMIN_USER_ID] = user.uid
-            if request.form.get('online'):  # 选择了记录登陆状态
-                session.permanent = True
-                bp.permanent_session_lifetime = timedelta(days=30)  # 有效期30天
-            return redirect(url_for('admin.index'))
+        if session.get('image'):  # 回退未获取验证码……
+            if session.get('image').lower() != form.captcha.data.lower():
+                return render_template('admin/login.html', form=form, message='验证码错误！')
+            user = Users.query.filter_by(username=form.username.data).first()
+            if user and user.check_password(form.password.data):
+                session[config.ADMIN_USER_ID] = user.uid
+                if request.form.get('online'):  # 选择了记录登陆状态
+                    session.permanent = True
+                    bp.permanent_session_lifetime = timedelta(days=30)  # 有效期30天
+                return redirect(url_for('admin.index'))
+            else:
+                return render_template('admin/login.html', form=form, message='用户名或密码错误！')
         else:
-            return render_template('admin/login.html', form=form, message='用户名或密码错误！')
+            return render_template('admin/login.html', form=form, message='请刷新验证码！')
     else:
         return render_template('admin/login.html', form=form)
 
