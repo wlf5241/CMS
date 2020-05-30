@@ -1,5 +1,5 @@
 # encoding:utf-8
-from flask import Blueprint, render_template, request, session, redirect, url_for, make_response
+from flask import Blueprint, render_template, request, session, redirect, url_for, make_response, jsonify
 from io import BytesIO
 from datetime import timedelta
 import config
@@ -7,6 +7,7 @@ from .models import Users
 from .forms import LoginForm
 from .decorators import login_require
 from utils.captcha import create_validate_code
+from extends import db
 
 bp = Blueprint("admin", __name__)
 
@@ -49,6 +50,47 @@ def get_code():
     response.headers['Content-Type'] = 'image/jpeg'
     session['image'] = strs
     return response
+
+
+@bp.route('/profile')
+@login_require
+def profile():
+    if config.ADMIN_USER_ID in session:
+        user = Users.query.get(session.get(config.ADMIN_USER_ID))
+    return render_template('admin/profile.html', user=user)
+
+
+@bp.route('/checkpwd/')
+@login_require
+def checkpwd():
+    data = None
+    oldpwd = request.args.get('oldpwd', '')
+    if config.ADMIN_USER_ID in session:
+        user = Users.query.filter_by(uid=session.get(config.ADMIN_USER_ID)).first()
+        if user.check_password(oldpwd):
+            data = {
+                "name": user.email,
+                "status": 11
+            }
+    if data is None:
+        data = {
+            'name': None,
+            'status': 00
+        }
+    return jsonify(data)
+
+
+@bp.route('/editpwd', methods=['GET', 'POST'])
+@login_require
+def editpwd():
+    if request.method == 'GET':
+        return render_template('admin/edit_pwd.html')
+    else:
+        newpwd1 = request.form.get('newpwd1')
+        user = Users.query.filter_by(uid=session.get(config.ADMIN_USER_ID)).first()
+        user.password = newpwd1
+        db.session.commit()
+        return render_template('admin/edit_pwd.html', message='密码修改成功!')
 
 
 @bp.route('/')
