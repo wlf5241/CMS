@@ -1,0 +1,54 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CMS-产品分类明细表</title>
+    {%include 'BootStrapBase.html'%}
+    <link rel="stylesheet" href="{{url_for('static',filename='static/h-ui.admin/css/public.css')}}">
+    <script type="text/javascript" src="{{url_for('static',filename='static/h-ui.admin/js/qikoo.js')}}"></script>
+    <div style="height:10px;clear:both;display:block"></div>
+    <style type="text/css">
+        .form_div {
+            width: 100%;
+            margin-left: 0px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <script language="JavaScript">
+        function rec() {
+            if (confirm("确定删除该条记录？")) {
+                a.setAttribute("onclick", '');
+                return true;
+            }
+            return false;
+        }
+    </script>
+
+    <div class="container">
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3>产品分类</h3>
+            <hr>
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="table table-striped">
+                <thead>
+                    <th width="120" align="left">分类名称</th>
+                    <th align="left">别名</th>
+                    <th align="left">简单描述</th>
+                    <th width="60" align="left">排序</th>
+                    <th width="80" align="left">操作</th>
+                </thead>
+                {% if body %}
+                {{ body| safe }}
+                {% endif %}
+            </table>
+            <hr>
+            <a href="{{url_for('admin.product_cat_add') }}" class="btn btn-default add">添加分类</a>
+        </div>
+    </div>
+</body>
+
+</html>

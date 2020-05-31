@@ -1,5 +1,5 @@
 ﻿{% extends "admin/base.html"%}
 {%block title%}CMS-后台管理首页{%endblock%}
 {%block body%}
-<iframe scrolling="yes" frameborder="0" src="welcome.html"></iframe>
+<iframe scrolling="yes" frameborder="0" src="{{url_for('admin.welcome')}}"></iframe>
 {%endblock%}

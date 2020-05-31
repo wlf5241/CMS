@@ -16,6 +16,7 @@
                         if(json.status==11){
                             $("#oldpwd").next().text('密码正确').removeClass('state1').addClass('state4');
                             checkok1=true
+                            $("#oldpwd").hide()
                         }
                         else{
                             $("#oldpwd").next().text('密码错误').removeClass('state1').addClass('state3');
@@ -65,6 +66,7 @@
 <dic class="container">
     <div class="form_div">
         <form action="{{url_for('admin.editpwd')}}" class="form-signin" role="form" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <h2 class="form-signin-heading">修改密码</h2>
             <input type="password" class="form-control" placeholder="请输入当前密码" required autofocus name="oldpwd" id='oldpwd'>
             <span class="state1"></span>

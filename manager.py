@@ -4,10 +4,11 @@ from flask_migrate import Migrate, MigrateCommand
 from app import createApp
 from extends import db
 from apps.admin import models as admin_models
+from apps.common import models as common_models  # 导入了才可以通过Migrate创建、更新
+from apps.front import models as front_models
 
 app = createApp()
 db.init_app(app)
-#db.create_all()
 manager = Manager(app)
 Migrate(app, db)
 manager.add_command('db', MigrateCommand)

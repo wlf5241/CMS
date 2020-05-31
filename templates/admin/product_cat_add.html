@@ -1,0 +1,130 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CMS-添加产品分类</title>
+    {%include 'BootStrapBase.html'%}
+    <link rel="stylesheet" href="{{url_for('static',filename='static/h-ui.admin/css/public.css')}}">
+    <div style="height:10px;clear:both;display:block"></div>
+    <style type="text/css">
+        .form_div {
+            width: 100%;
+            margin-left: 0px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <script language="JavaScript">
+        $(function () {
+            var checkok1 = false;
+            var checkok2 = false;
+            //栏目输入框失去焦点时
+            $('#type_name').on('blur', function () {
+                if (($(this).val() == '')) {
+                    layer.msg('类型名称不能为空');
+                }
+                else {
+                    checkok1 = true;
+                }
+            });
+
+            //判断是否被选中
+            $("#check").change(function () {
+                /*chekbox选中返回true，否则为false*/
+                //var check = $(this).is(":checked");
+                if (($(this).is(":checked") == true)) {
+                    $("#dir").hide();
+                }
+                else {
+                    $("#dir").show();
+                }
+            });
+
+            //栏目关键字输入框失去焦点时
+            $('#keywords').on('blur', function () {
+                if (($(this).val() == '')) {
+                    layer.msg('分类关键字不能为空');
+                } else {
+                    checkok2 = true;
+                }
+            });
+            //提交按钮,所有验证通过方可提交
+            $('#submit').click(function () {
+                if (checkok1 && checkok2) {
+                    $('form').submit();
+                } else {
+                    return false;
+                }
+            });
+        })
+    </script>
+
+    <div class="container">
+        <form action="{{url_for('admin.product_cat_add') }}" class="form-horizontal" role="form" method='post'>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">上级分类</label>
+                <div class="col-sm-2">
+                    <select name="parent_id" id="parent_id" class="selectpicker show-tick form-control">
+                        <option value="0">无</option>
+                        {% if body %}
+                        {{ body| safe }}
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">分类名称</label>
+                <div class="col-sm-4">
+                    <input id="type_name" name="type_name" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">分类别名</label>
+                <div class="col-sm-4">
+                    <div class="form-inline">
+                        <input id="dirpath" name="dirpath" class="form-control" type="text">
+                        <input name="check" id="check" type="checkbox" value="1" checked="checked">自动生成拼音
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">关键字 </label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" id="keywords" name="keywords">
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">分类描述</label>
+                <div class="col-sm-6">
+                    <textarea id="description" class="form-control" rows="3" name="description"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">排序</label>
+                <div class="col-sm-3">
+                    <input id="product_sort" class="form-control" type="text" name="product_sort" value="1">
+                </div>
+            </div>
+            <input type="hidden" id="visable" class="form-control" name="visable" value="1">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"> </label>
+                <div class="col-sm-2">
+                    <button id="submit" neme="submit" class="btn btn-sm btn-primary btn-block" type="submit">提交</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</body>
+
+</html>
