@@ -182,3 +182,18 @@ def welcome():
 @login_require
 def index():
     return render_template('admin/index.html')
+
+
+@bp.app_errorhandler(404)
+def err_404(error):
+    return render_template('ShowErr.html', ErrCode=404, ErrMsg='对不起，您要访问的资源不存在~')
+
+
+@bp.app_errorhandler(500)
+def err_404(error):
+    return render_template('ShowErr.html', ErrCode=500, ErrMsg=error)
+
+
+@bp.app_errorhandler(400)
+def csrf_error(reason):
+    return render_template('ShowErr.html', ErrCode=400, ErrMsg=reason)

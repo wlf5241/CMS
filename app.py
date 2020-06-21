@@ -24,8 +24,3 @@ if __name__ == '__main__':
     db.init_app(app)
     csrf.init_app(app)
     app.run(host="0.0.0.0", port=80, debug=True)
-
-
-    @csrf.error_handler
-    def csrf_error(reason):
-        return render_template('ShowErr.html', ErrCode=400, ErrMsg=reason)
